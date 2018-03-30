@@ -7,7 +7,7 @@ import (
 )
 
 type Helper interface {
-	LoadDepFile(filepath string) ([]byte, error)
+	LoadDepFile(filepath string)
 	LatestDepVersion(dep string) string
 	FetchDepInfo(dep Dep) []byte
 }
@@ -22,14 +22,12 @@ type PythonHelper struct {
 	Deps    []Dep
 }
 
-func (ph *PythonHelper) LoadDepFile(filename string) error {
+func (ph *PythonHelper) LoadDepFile(filename string) {
 	raw, err := ioutil.ReadFile(filename)
 	if err != nil {
 		log.Fatal("Failed to load dep file: %v", err)
 	}
-	log.Println(raw)
-
-	return nil
+	ph.Deps = ParseDepFile(raw)
 }
 
 func ParseDepFile(raw []byte) []Dep {
